@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <!--/* other page level css */-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
+</head>
+<body th:with="loginUser=${#request.userPrincipal.principal}">
+<div th:replace="fragments/main-header :: main-header"/>
+
+<div th:replace="fragments/video-container :: video-container"/>
+
+<div th:replace="fragments/sidebar :: sidebar"/>
+<div th:replace="fragments/footer :: footer-js"/>
+<div th:replace="fragments/footer :: sidebar-js"/>
+<!--/* other page level js */-->
+<script th:inline="javascript">
+
+    $(document).ready(function () {
+        var loginUserId = /*[[${loginUser.id}]]*/ 1;
+        var $optionsList = $(".video-options");
+        $optionsList.each(function () {
+            var videoId = $(this).attr("data-video-id"),
+                ownerId = $(this).attr("data-owner-id");
+
+            var $item = $(this);
+            $item.on("click", function () {
+                if (videoId && videoId !== null) {
+                    $.post("/history/del", {viewerId:loginUserId,videoId:videoId})
+                        .done(function () {
+                            $item.closest("li").remove();
+                        })
+                } else {
+                    $.post("/myfollow/del", {viewerId:loginUserId,playerId:ownerId})
+                        .done(function () {
+                            $item.closest("li").remove();
+                        })
+                }
+            })
+        });
+
+        $('#clear-all-btn').on("click", function () {
+            $.post("/history/clear", {uid:loginUserId})
+                .done(function () {
+                    $(".video-container ui").remove()
+                })
+        });
+            
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <!--/* other page level css */-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
+</head>
+<body th:with="loginUser=${#request.userPrincipal.principal}">
+    <div class="setting-container col-md-4 col-lg-3 pull-left" th:fragment="setting-container">
+        <div id="room-set-form" class="login-form">
+            <div class="form-header">
+                <span class="h2">直播设置</span><br>
+            </div>
+
+            <div class="form-group">
+                <label for="videoname">直播名称：</label>
+                <input id="videoname" name="videoname" type="text" class="form-control" autofocus="true" required="true" /><br>
+                <th:block th:each="cate,iterState : ${catelist}">
+                    <label class="radio-inline">
+                        <input type="radio" name="videocate" th:value="${cate.id}" th:text="${cate.name}" required="true">
+                    </label>
+                    <br th:if="${iterState.count%3==0}">
+                </th:block>
+                <br><button class="btn btn-primary clearfix" id="setting-btn" onclick="setting()">开始直播</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>RTMP 地址：</label><input name="rtmpUrl" type="text" class="form-control" disabled /><br>
+            <label>直播码：</label><input name="roomName" type="text" class="form-control" disabled />
+        </div>
+    </div>
+<div th:replace="fragments/sidebar :: sidebar"/>
+<div th:replace="fragments/footer :: footer-js"/>
+<div th:replace="fragments/footer :: sidebar-js"/>
+<script th:inline="javascript">
+
+    function setting() {
+        var $form = $('#room-set-form'),
+            $btn = $('#setting-btn'),
+            $rtmpUrl = $('input[name="rtmpUrl"]'),
+            $roomName = $('input[name="roomName"]'),
+            videoName = $('#videoname').val(),
+            videoCate = $('input[name="videocate"]:checked').val();
+        var loginUserId = /*[[${loginUser.id}]]*/ 1;
+        if ($btn.html() == '开始直播') {
+            $.post("/video/start", {ownerId:loginUserId,name:videoName,categoryId:videoCate})
+                .done(function (roomInfo) {
+                    $rtmpUrl.val(roomInfo["rtmpUrl"]);
+                    $roomName.val(roomInfo["name"]);
+                    $btn.html('结束直播')
+                })
+        } else {
+            $.post("/video/stop", {"name":$roomName.val()})
+                .done(function () {
+                    $rtmpUrl.val("")
+                    $roomName.val("")
+                    $btn.html('开始直播')
+                })
+        }
+    }
+</script>
+</body>
+</html>

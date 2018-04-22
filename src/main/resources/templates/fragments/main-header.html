@@ -1,0 +1,8 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="list-header" th:fragment="main-header">
+    <i class="header-line"></i>
+    <div class="list-title" th:text="${mainHeader}"></div>
+    <a role="button" id="clear-all-btn" class="clear-all-btn" th:if="${mainHeader == '观看记录'}">全部清空</a>
+</div>
+</html>

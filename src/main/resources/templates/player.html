@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <!--/* other page level css */-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
+    <link href="http://vjs.zencdn.net/6.0.0/video-js.css" rel="stylesheet">
+</head>
+<body th:with="loginUser=${#request.userPrincipal.principal}">
+<div th:replace="fragments/player-container :: player-container"/>
+
+<div th:replace="fragments/sidebar :: sidebar"/>
+<div th:replace="fragments/footer :: footer-js"/>
+<div th:replace="fragments/footer :: sidebar-js"/>
+
+<script src="http://vjs.zencdn.net/6.6.3/video.js"></script>
+<!--for DASH-->
+<script src="http://cdn.dashjs.org/latest/dash.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-dash/2.9.3/videojs-dash.js"></script>
+<!--for RTMP-->
+<script src="https://cdn.jsdelivr.net/npm/videojs-flash@2/dist/videojs-flash.min.js"></script>
+<script th:inline="javascript">
+
+    $(document).ready(function () {
+
+        var loginUserId = /*[[${loginUser.id}]]*/ 1;
+
+        var islive = /*[[${playRoomInfo.islive}]]*/ true;
+        var videosrc = /*[[${playRoomInfo.rtmpUrl}]]*/ 'rtmp://live.hkstv.hk.lxdns.com/live/hks';
+        var playType = "rtmp/flv";
+
+        videojs.options.flash.swf = "https://cdnjs.cloudflare.com/ajax/libs/videojs-swf/5.4.1/video-js.swf";
+        var player = videojs('video-window');
+        player.src({ src: videosrc, type: playType});
+        player.play();
+
+        $(".stream-options input[type=radio]").each(function () {
+            $(this).on("change", function () {
+                $radio = $(".stream-options input[type=radio]:checked");
+                if ($radio.val()=="RTMP") {
+                    playType = "rtmp/flv";
+                    videosrc = /*[[${playRoomInfo.rtmpUrl}]]*/ 'rtmp://live.hkstv.hk.lxdns.com/live/hks';
+                } else if ($radio.val()=="DASH") {
+                    playType = "application/dash+xml";
+                    videosrc = /*[[${playRoomInfo.dashUrl}]]*/ 'rtmp://live.hkstv.hk.lxdns.com/live/hks';
+                } else if ($radio.val()=="FLV-HTTP") {
+                    playType = "video/flv";
+                    videosrc = /*[[${playRoomInfo.flvHttpUrl}]]*/ 'rtmp://live.hkstv.hk.lxdns.com/live/hks';
+                }
+                console.log("src: " + videosrc + ", palyType: " + playType);
+                player.src({ src: videosrc, type: playType});
+                player.load();
+
+                player.ready(function() {
+                    console.log("READY");
+                    this.play()
+                });
+            });
+        });
+        
+        $(".room-head-tool-follow-btn").click(function () {
+            var $btn = $(this),
+                $count = $(".room-head-tool-follow-count"),
+                playerId = $(this).attr("data-subscribe-ownerid");
+            if ($btn.html() == '订阅') {
+                $.post("/myfollow/add", {viewerId: loginUserId, playerId: playerId})
+                    .done(function () {
+                        $count.html(parseInt($count.html())+1);
+                        $btn.html('取消订阅')
+                    })
+            } else {
+                $.post("/myfollow/del", {viewerId: loginUserId, playerId: playerId})
+                    .done(function () {
+                        $count.html(parseInt($count.html())-1);
+                        $btn.html('订阅')
+                    })
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

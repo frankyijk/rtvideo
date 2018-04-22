@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}" />
+
+    <title>熊猫直播_泛娱乐直播平台</title>
+</head>
+<body>
+
+<div class="login-pane col-xs-10 col-ms-8 col-md-4 col-lg-3">
+    <form method="POST" th:action="@{/registration}" th:object="${userForm}" class="form-signin">
+        <div class="form-header">
+            <span class="h2">创建帐号</span>
+            <span class="pull-right"><a th:href="@{/login}">已有帐号 &gt;</a></span>
+        </div>
+        <div class="form-group">
+            <div class="alert alert-info" th:if="${error}" th:text="${msg}">用户名已存在</div>
+            <input type="text" th:field="*{username}" class="form-control" placeholder="请输入用户名" autofocus="true" required/>
+            <input type="text" th:field="*{nickname}" class="form-control" placeholder="起个昵称吧" required />
+            <input type="password" th:field="*{password}" class="form-control" placeholder="请设置密码" required />
+            <input type="password" class="form-control" placeholder="再次输入密码" required />
+            <span class="hidden alert alert-warning">密码设置不一致，请重新输入</span>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">注&nbsp;册</button>
+        </div>
+    </form>
+</div>
+
+<div th:replace="fragments/footer :: footer-js"/>
+
+</body>
+</html>

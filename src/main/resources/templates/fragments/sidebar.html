@@ -1,0 +1,80 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<div id="sidebar" class="sidebar-container" th:fragment="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <a th:href="@{/index}"><img src="https://i.h2.pdim.gs/3459966f6e12c3f61e596278e5af4b54.webp"></a>
+        </div>
+        <div class="sidebar-search">
+            <div class="form-group">
+                <div>
+                    <input type="text" class="form-control search-form" placeholder="搜游戏/主播">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar-content">
+        <div class="sidebar-entrance">
+            <a th:href="@{/all}" class="entrance-item" href="#" id="entrance-item-allvideo">
+                <img class="img-icon" th:src="@{/icons/video.svg}">
+                <span class="sidebar-entrance-name">全部直播</span>
+            </a>
+            <a th:href="@{/cate}" class="entrance-item" href="#" id="entrance-item-allcate">
+                <img class="img-icon" th:src="@{/icons/category.svg}">
+                <span class="sidebar-entrance-name">全部分类</span>
+            </a>
+            <a th:href="@{/myfollow(uid=${loginUser.id})}" class="entrance-item " href="#" id="entrance-item-myfollow">
+                <img class="img-icon" th:src="@{/icons/subscribe.svg}">
+                <span class="sidebar-entrance-name">我的订阅</span>
+            </a>
+        </div>
+    </div>
+    <div class="sidebar-userinfo" sec:authorize="isAuthenticated()">
+        <div class="circle"></div>
+        <div class="sidebar-userinfo-inner">
+            <a href="#" class="sidebar-userinfo-avatar-wrap">
+                <div class="sidebar-userinfo-avatar">
+                    <img th:src="${loginUser.avatar}">
+                </div>
+            </a>
+
+            <div class="sidebar-userinfo-detail">
+                <a class="sidebar-userinfo-username" href="#" sec:authentication="name">陌生人</a>
+            </div>
+
+            <div class="sidebar-userinfo-record">
+                <div class="sidebar-userinfo-record-inner">
+                    <a th:href="@{/watchhistory(uid=${loginUser.id})}"class="sidebar-userinfo-history" href="#">观看历史</a>
+                    <a th:href="@{/myfollow(uid=${loginUser.id})}" class="sidebar-userinfo-myfollow" href="#">我的订阅</a>
+
+                    <a th:href="@{/roomsetting}" class="sidebar-userinfo-apply-for-host" th:if="${#authorization.expression('hasRole(''ROLE_UPLOADER'')')}">
+                        <span class="sidebar-userinfo-apply-for-host-text">直播设置</span>
+                    </a>
+                    <a id="applybtn" role="button" class="sidebar-userinfo-apply-for-host" th:unless="${#authorization.expression('hasRole(''ROLE_UPLOADER'')')}">
+                        <span class="sidebar-userinfo-apply-for-host-text" onclick="apply()"><i class="fa fa-user-o" aria-hidden="true"></i> 我要当主播</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="sidebar-userinfo-functional">
+                <a href="#" class="sidebar-userinfo-setting"><i class="fa fa-cog" aria-hidden="true"></i> 设置</a>
+                <a th:href="@{/logout}" class="sidebar-userinfo-loginout-btn"><i class="fa fa-sign-out" aria-hidden="true"></i> 退出登录</a>
+            </div>
+
+        </div>
+    </div>
+    <script th:inline="javascript">
+        function apply() {
+            var loginUserId = /*[[${loginUser.id}]]*/ 1;
+            $.post("/user/apply2player", {uid:loginUserId})
+                .done(function (data) {
+                    var $applybtn = $('#applybtn'),
+                        $node = $('<a href="/roomsetting" class="sidebar-userinfo-apply-for-host">' +
+                            '<span class="sidebar-userinfo-apply-for-host-text">直播设置</span></a>');
+                    $applybtn.replaceWith($node)
+
+                    alert("申请成功");
+            })
+        }
+    </script>
+</div>

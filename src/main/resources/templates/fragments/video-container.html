@@ -1,0 +1,39 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div class="video-container" th:fragment="video-container" th:with="noempty=${videoItemList != null and #lists.size(videoItemList) > 0}">
+    <ui class="video-list clearfix" th:if="${noempty}">
+        <th:block th:each="item : ${videoItemList}">
+            <li class="video-list-item video-no-tag">
+                <a th:href="@{'/room/'+${item.roomName}(videoId=${item.videoId},viewerId=${#request.userPrincipal.principal.id})}"
+                   class="video-list-item-wrap">
+                    <span th:if="${mainHeader == '我的订阅' or mainHeader == '观看记录'}">
+                    <span class="video-tag video-tag-online" th:if="${item.islive}">直播中</span>
+                    <span class="video-tag video-tag-offline" th:unless="${item.islive}">休息</span>
+                    </span>
+                    <div class="video-cover">
+                        <img class="video-img video-img-lazy" th:alt="${item.videoName}" th:src="${item.thumbnail}">
+                    </div>
+                    <div class="video-info">
+                        <span class="video-title" th:text="${item.videoName}">直播名称</span>
+                        <span class="video-nickname" th:text="${item.ownerNickname}">昵称</span>
+                        <span class="video-number"><i class="glyphicon glyphicon-eye-open"></i> <span th:text="${item.pv}">2930</span></span>
+                    </div>
+                </a>
+                <div class="video-label">
+                    <div class="video-label-content">
+                        <a class="video-label-item label-color" th:href="@{'/cate/' + ${item.categoryId}}" th:text="${item.categoryName}">绝地求生</a>
+                    </div>
+                </div>
+                <div class="video-options" th:attr="data-video-id=${item.videoId}" th:if="${mainHeader == '观看记录'}">
+                    <a role="button" class="video-btn video-btn-delete">删除</a>
+                </div>
+                <div class="video-options" th:attr="data-owner-id=${item.ownerId}" th:if="${mainHeader == '我的订阅'}">
+                    <a role="button" class="video-btn video-btn-delete">取消订阅</a>
+                </div>
+            </li>
+        </th:block>
+    </ui>
+    <center class="h4" th:unless="${noempty}">这里空空如也～</center>
+</div>
+
+</html>

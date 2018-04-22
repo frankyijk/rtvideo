@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <!--/* other page level css */-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
+</head>
+<body th:with="loginUser=${#request.userPrincipal.principal}">
+<div th:replace="fragments/main-header :: main-header"/>
+<div class="sort-container" th:fragment="sort-container">
+    <ul class="sort-menu video-list clearfix" data-pdt-block="s1" th:if="${catelist != null}">
+        <th:block th:each="cate : ${catelist}">
+            <li class="sort-list-item">
+                <a class="sort-list-item-wrap" href="#" th:href="@{'/cate/' + ${cate.id}}">
+                    <div class="img-container"><img th:src="${cate.img}" th:alt="${cate.name}"></div>
+                    <div class="cate-title" th:text="${cate.name}"></div>
+                </a>
+            </li>
+        </th:block>
+    </ul>
+    <center class="h4" th:unless="${catelist != null}">这里空空如也～</center>
+</div>
+<div th:replace="fragments/sidebar :: sidebar"/>
+<div th:replace="fragments/footer :: footer-js"/>
+<div th:replace="fragments/footer :: sidebar-js"/>
+<!--/* other page level js */-->
+</body>
+</html>

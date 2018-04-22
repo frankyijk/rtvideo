@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title> Stream Player </title>
+    <link href="http://vjs.zencdn.net/6.0.0/video-js.css" rel="stylesheet">
+</head>
+<body>
+<center>
+    <div>
+        <video id=example-video width=600 height=300 class="video-js vjs-default-skin" controls> </video>
+        <video id="livestream" class="video-js vjs-default-skin"
+               controls autoplay preload="auto" width="1000" height="600" data-setup={}>
+            <!-- <source src="123.mp4" type="video/mp4"> -->
+            <source src="rtmp://live.hkstv.hk.lxdns.com/live/hks" type="rtmp/flv">
+            <!-- <source src="rtmp://192.168.1.109:1935/live/test" type="rtmp/flv"> -->
+            <!-- <source src="http://localhost:8080/live/test.flv"> -->
+            <!-- <source src="http://cdn-fms.rbs.com.br/vod/hls_sample1_manifest.m3u8" type='application/x-mpegURL'> -->
+            <p class="vjs-no-js">
+                To view this video please enable JavaScript, and consider upgrading to a web browser that
+                <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+            </p>
+        </video>
+
+    </div>
+</center>
+
+<script src="http://vjs.zencdn.net/6.6.3/video.js"></script>
+
+<!--for DASH-->
+<script src="http://cdn.dashjs.org/latest/dash.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-dash/2.9.3/videojs-dash.js"></script>
+
+<!--for RTMP-->
+<script src="https://cdn.jsdelivr.net/npm/videojs-flash@2/dist/videojs-flash.min.js"></script>
+
+<script>
+    videojs.options.flash.swf = "https://cdnjs.cloudflare.com/ajax/libs/videojs-swf/5.4.1/video-js.swf";
+    var player = videojs('example-video');
+    player.src({ src: 'http://192.168.1.109/dash/test.mpd', type: 'application/dash+xml'});
+    player.play();
+</script>
+</body>
+</html>

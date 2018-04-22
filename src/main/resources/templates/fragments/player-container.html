@@ -1,0 +1,39 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div class="room-container" th:fragment="player-container">
+    <div class="room-content-box">
+        <div class="room-head-box">
+            <div class="room-head-info">
+                <div class="room-head-info-cover">
+                    <img th:src="${playRoomInfo.avatar}">
+                </div>
+                <h1 class="room-head-info-title" th:text="${playRoomInfo.videoname}">直播名称</h1>
+                <div class="room-head-info-detail clearfix">
+                    <span class="room-head-info-hostname" th:text="${playRoomInfo.nickname}">姜姜姜姜</span>
+                    <span class="room-head-info-room-id" th:text="'房间号: ' + ${playRoomInfo.roomName}">房间号: 1518957</span>
+                </div>
+            </div>
+            <div class="room-head-tool clearfix">
+                <div class="room-head-tool-follow-container">
+                    <div class="room-head-tool-follow ">
+                        <div class="room-head-tool-follow-count" th:text="${playRoomInfo.followerNum}">39,011</div>
+                        <div class="room-head-tool-follow-btn" th:text="${playRoomInfo.subscribed ? '取消订阅' : '订阅'}"
+                             th:attr="data-subscribe-ownerid=${playRoomInfo.playerId}">订阅</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="player-windows">
+            <video id="video-window" width=900 class="video-js vjs-default-skin" controls autoplay preload="auto"></video>
+        </div>
+        <div class="stream-options">
+            <input type="radio" name="pull-style" id="RTMP" value="RTMP" checked />
+            <label for="RTMP">RTMP 流</label>
+            <input type="radio" name="pull-style" id="MPEG_DASH" value="DASH" />
+            <label for="MPEG_DASH">DASH 流</label>
+            <input type="radio" name="pull-style" id="FLV-HTTP" value="FLV-HTTP" />
+            <label for="FLV-HTTP">FLV over HTTP</label>
+        </div>
+    </div>
+</div>
+</html>

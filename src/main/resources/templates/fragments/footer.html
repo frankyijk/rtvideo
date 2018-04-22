@@ -1,0 +1,32 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+</head>
+<body>
+<div th:fragment="footer">
+    <div class="text-center">
+        <p> <a href="http://www.miitbeian.gov.cn/" target="_blank">沪ICP备15043293号</a> | <a href="http://www.panda.tv/news/1101414857/3700943925/3701130188.html" target="_blank">沪网文[2015]0826-226号</a> | <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31010802001046"><img src="https://i.h2.pdim.gs/d0289dc0a46fc5b15b3363ffa78cf6c7.webp">沪公网安备 31010802001046号</a></p>
+        <p>上海熊猫互娱文化有限公司 | 地址：上海闸北区灵石路695号3号楼1804室 | 举报电话&amp;客服热线：10108666</p>
+        <p><span class="room-report">儿童色情信息&amp;不良房间举报</span> | <a href="http://report.12377.cn:13225/toreportinputNormal_anis.do" target="_blank">网上有害信息举报专区</a> | <a href="http://jb.ccm.gov.cn/" target="_blank">12318全国文化市场举报网站</a> | <a href="http://www.shjbzx.cn/" target="_blank">上海市互联网违法和不良信息举报</a></p>
+    </div>
+    | Logged user: <span sec:authentication="name"></span> |
+    Roles: <span sec:authentication="principal.authorities"></span> |
+    <a th:href="@{/logout}">Sign Out</a>
+</div>
+<div th:fragment="footer-js">
+    <script type="text/javascript" th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+</div>
+<div th:fragment="sidebar-js">
+    <script type="text/javascript" th:src="@{/js/sidemenu.js}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#sidebar').BootSideMenu();
+            if ($.cookie('active-menu') && $.cookie('active-menu') != null) {
+                $('#'+ $.cookie('active-menu')).addClass("active");;
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

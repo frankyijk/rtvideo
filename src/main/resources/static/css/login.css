@@ -1,0 +1,11 @@
+.login-pane {
+    margin: 60px auto;
+    float: none;
+}
+.login-pane .form-group input {
+    margin: 10px 0;
+}
+.login-pane a:hover {
+    color: #666;
+    cursor: pointer;
+}
